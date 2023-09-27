@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+# Docker CE on RHEL 7.9 #
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+# Mount the RHEL iso locally if you have attached ISO on your virtual machine
+mount -o loop /dev/sr0  /root/testing/
+
+# Install EPEL repositories packages.
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+# Install required packages.
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+
+# Install dependent packages
+# If you get the issue of dependencies check the URL : http://mirror.centos.org/centos/7/extras/x86_64/Packages/.
+sudo yum install -y http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.107-3.el7.noarch.rpm
+sudo yum -y  install http://mirror.centos.org/centos/7/extras/x86_64/Packages/slirp4netns-0.4.3-4.el7_8.x86_64.rpm  
+sudo yum -y install http://mirror.centos.org/centos/7/extras/x86_64/Packages/fuse-overlayfs-0.7.2-6.el7_8.x86_64.rpm
+# Set up Docker repository.
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# Install Docker Community Editon and tools.
+sudo yum install -y docker-ce docker-ce-cli containerd.io
+  
+# start and enable docker service and check the status
+sudo systemctl enable --now docker
+sudo systemctl status docker 
+
+# Check the docker version
+echo -ne '\n'
+docker --version
+
+echo -ne '\n'
+echo -e "\e[32mDocker Installation is successfull\e[0m"
